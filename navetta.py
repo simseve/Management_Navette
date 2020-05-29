@@ -57,3 +57,10 @@ pilot5.offload_from_bus(bus1)
 
 # Display bus composition
 bus1.display_bus_composition()
+
+# Cancel a Navetta in a specific day
+bus1.signout(today)
+
+# Display the schedule of a single day
+today.display_day_schedule()
+bus1.signout(today)

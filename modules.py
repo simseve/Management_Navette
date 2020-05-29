@@ -3,8 +3,15 @@ class DayOfService:
         self.date = date
         self.buses = []
 
-    def add_bus(self, bus_name):
+    def _add_bus(self, bus_name):
         self.buses.append(bus_name)
+
+    def _cancel_bus(self, bus_name):
+        if bus_name in self.buses:
+            self.buses.remove(bus_name)
+        else:
+            print("The bus is not found in daily schedule")
+            return False
 
     def display_day_schedule(self):
         print("\n\n\n")
@@ -25,10 +32,10 @@ class Bus:
         self.max_seats = max_seats
         self.current_seats = max_seats
 
-    def add_person(self, person):
+    def _add_person(self, person):
         self.people.append(person)
 
-    def offload_person(self, person):
+    def _offload_person(self, person):
         if person in self.people:
             self.people.remove(person)
         else:
@@ -37,8 +44,14 @@ class Bus:
 
     def join_day(self, day):
         self.day = day
-        day.add_bus(self)
+        day._add_bus(self)
         print("Bus {} has joined {}".format(self.bus_id, self.day.date))
+
+    def signout(self, day):
+        self.day = day
+        b = day._cancel_bus(self)
+        if b is not False:
+            print("Bus {} has been cancelled on {}".format(self.bus_id, self.day.date))
 
     def display_bus_composition(self):
         print("\n\n\n")
@@ -59,7 +72,7 @@ class Pilot:
         self.bus = bus
         if self.bus.current_seats > 0:
             self.bus.current_seats -= 1
-            bus.add_person(self)
+            bus._add_person(self)
             print("\n\nPilot {} has joined bus {}".format(self.name, self.bus.bus_id))
         else:
             print("\n\nThe bus {} is full and pilot {} is not added".format(self.bus.bus_id, self.name))
@@ -67,7 +80,7 @@ class Pilot:
     def offload_from_bus(self, bus):
         self.bus = bus
         self.bus.current_seats += 1
-        a = bus.offload_person(self)
+        a = bus._offload_person(self)
         if a is not False:
             print("\n\nPilot {} has been offloaded from bus {}".format(self.name, self.bus.bus_id))
 
