@@ -30,7 +30,7 @@ pilot2.join_bus(bus1)
 pilot3.join_bus(bus1)
 pilot4.join_bus(bus1)
 
-# Display the current compsition status of the navetta
+# Display the current composition status of the navetta
 bus1.display_bus_composition()
 
 # Add a new pilot to the navetta (exceed max seats)
@@ -63,4 +63,12 @@ bus1.signout(today)
 
 # Display the schedule of a single day
 today.display_day_schedule()
-bus1.signout(today)
+
+# Cancel a navetta
+# bus1.signout(today)
+
+bus2.reschedule("10:25")
+bus2.display_bus_composition()
+today.display_day_schedule()
+
+
