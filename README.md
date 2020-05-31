@@ -1,79 +1,87 @@
-Navette Management
-==========
+# Navetta
 
 This is a simple App that help private owner of shuttle buses that drives Paraglider pilots to specific Take Off point to manage the service
 
 In this branch I am adding all hte information to SQLite3
 
-USAGE:
+## Getting Started
 
-# Open up a day for scheduling Navette
-today = DayOfService("29/05/2020")
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-# Create how many navette we plan to schedule in a day and at what time. Specify also max number of seats
-bus1 = Bus("Linea 1", "10:00", 4)
-bus2 = Bus("Linea 2", "12:00", 4)
-bus3 = Bus("Linea 3", "16:00", 4)
+### Prerequisites
 
-# Create pilots
-pilot1 = Pilot("Simone")
-pilot2 = Pilot("Giorgio")
-pilot3 = Pilot("Musica")
-pilot4 = Pilot("Giulia")
-pilot5 = Pilot("Nicole")
-pilot6 = Pilot("Carol")
+What things you need to install the software and how to install them
 
-# Schedule Navette to a specific day
-bus1.join_day(today)
-bus2.join_day(today)
-bus3.join_day(today)
+```
+Give examples
+```
 
-# Display the schedule of a single day
-today.display_day_schedule()
+### Installing
 
-# Load pilots into the bus on a specific time
-pilot1.join_bus(bus1)
-pilot2.join_bus(bus1)
-pilot3.join_bus(bus1)
-pilot4.join_bus(bus1)
+A step by step series of examples that tell you how to get a development env running
 
-# Display the current composition status of the navetta
-bus1.display_bus_composition()
+Say what the step will be
 
-# Add a new pilot to the navetta (exceed max seats)
-pilot5.join_bus(bus1)
-bus1.display_bus_composition()
+```
+Give the example
+```
 
-# Offload an existing pilot from the navetta
-pilot4.offload_from_bus(bus1)
-bus1.display_bus_composition()
+And repeat
 
-# Add a new pilot to the navetta
-pilot5.join_bus(bus1)
-bus1.display_bus_composition()
+```
+until finished
+```
 
-# Try to offload a use tha is not currently on the navetta
-pilot4.offload_from_bus(bus1)
-bus1.display_bus_composition()
+End with an example of getting some data out of the system or using it for a little demo
 
-# Offload all
-pilot1.offload_from_bus(bus1)
-pilot2.offload_from_bus(bus1)
-pilot3.offload_from_bus(bus1)
-pilot5.offload_from_bus(bus1)
+## Running the tests
 
-# Display bus composition
-bus1.display_bus_composition()
+Explain how to run the automated tests for this system
 
-# Cancel a Navetta in a specific day
-bus1.signout(today)
+### Break down into end to end tests
 
-# Display the schedule of a single day
-today.display_day_schedule()
+Explain what these tests test and why
 
-# Cancel a navetta
-# bus1.signout(today)
+```
+Give an example
+```
 
-bus2.reschedule("10:25")
-bus2.display_bus_composition()
-today.display_day_schedule()
+### And coding style tests
+
+Explain what these tests test and why
+
+```
+Give an example
+```
+
+## Deployment
+
+Add additional notes about how to deploy this on a live system
+
+## Built With
+
+* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
+* [Maven](https://maven.apache.org/) - Dependency Management
+* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+
+## Contributing
+
+Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+
+## Authors
+
+* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+
+See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Acknowledgments
+
+* myself
