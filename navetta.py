@@ -55,3 +55,5 @@ bus1.display_bus_composition()
 
 
 tomorrow = DayOfService("01/06/2020", "Tomorrow is not a very sunny day")
+
+db.close()

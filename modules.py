@@ -64,9 +64,10 @@ class DayOfService:
         if row:
             print("I have found {} buses on {}".format(len(row), self.date))
             for x in row:
-                print(x)
+                t1, t2, t3, t4, t5 = x
+                print("On date {} at {} the bus {} {} with {} passengers is set for departure".format(t1, t2, t3, t4, t5))
         else:
-            print("\t\tNo bus are scheduled")
+            print("The bus is not scheduled, not sure why you want to cancel")
 
 
 class Bus:
@@ -138,7 +139,8 @@ class Bus:
         if row:
             print("I have found {} pilots on {}".format(len(row), self.bus_name))
             for x in row:
-                print(x)
+                t1, t2, t3, t4 = x
+                print("Bus {} with plate {} due at {} has got pilot {} confirmed".format(t1, t2, t3, t4))
         else:
             print("No bus are scheduled")
 
@@ -183,9 +185,8 @@ class Pilot:
             bus.add_person(self)
             print("Pilot {} with ID {} has joined bus {} with ID {}".
                   format(self.unique_pilot_id, self.nick_name, self.bus.bus_name, bus.unique_bus_id))
-
         else:
-            print("nThe bus {} is full and pilot {} is not added".format(self.bus.bus_name, self.last_name))
+            print("The bus {} is full and pilot {} is not added".format(self.bus.bus_name, self.nick_name))
 
     def offload_from_bus(self, bus):
         self.bus = bus
