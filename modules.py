@@ -127,7 +127,6 @@ class Bus:
         day.add_bus(self)
         print("Bus {} with ID {} has joined {} with id {}".format(self.bus_name, self.unique_bus_id,
                                                                   self.day.date, day.unique_day_id))
-
     def signout(self, day):
         self.day = day
         day.cancel_bus(self)
