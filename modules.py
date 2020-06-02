@@ -5,17 +5,17 @@ import uuid
 
 
 class CreateVehicles:
-    def __init__(self, make, operator, plate, vehicle_description):
+    def __init__(self, operator, make, plate, vehicle_description):
         self.make = make
-        self.operator = operator
         self.plate = plate
         self.vehicle_description = vehicle_description
         self.unique_vehicle_id = str(uuid.uuid1())
+        self.operator = operator
         vehicle_creation_time = current_time()
 
         c.execute("INSERT INTO vehicles (vehicle_id, time, make, operator, plate, description)"
                   " VALUES (?, ?, ?, ?, ?, ?)", (self.unique_vehicle_id, vehicle_creation_time, self.make,
-                                                 self.operator, self.plate, self.vehicle_description))
+                                                 self.operator.unique_operator_id, self.plate, self.vehicle_description))
         db.commit()
 
 
@@ -86,11 +86,11 @@ class Bus:
         display_bus_composition: print out the passenger list
     """
 
-    def __init__(self, bus_name, departure_time, max_seats, vehicle_id, bus_description=''):
+    def __init__(self, bus_name, departure_time, max_seats, vehicle, bus_description=''):
         self.people = []
         self.departure_time = departure_time
         self.bus_description = bus_description
-        self.vehicle_id = vehicle_id
+        self.vehicle = vehicle
         self.bus_name = bus_name
         self.max_seats = max_seats
         self.current_seats = max_seats
@@ -102,7 +102,7 @@ class Bus:
         c.execute("INSERT INTO buses (bus_id, time, departure_time, bus_name, max_seats, vehicle_id, description) "
                   "VALUES (?, ?, ?, ?, ?, ?, ?)",
                   (self.unique_bus_id, bus_creation_time, self.departure_time, self.bus_name, self.max_seats,
-                   self.vehicle_id, self.bus_description))
+                   self.vehicle.unique_vehicle_id, self.bus_description))
 
         db.commit()
 
@@ -192,6 +192,35 @@ class Pilot:
         self.bus.current_seats += 1
         bus.offload_person(self)
         print("Pilot {} has been offloaded from bus {}".format(self.last_name, self.bus.bus_name))
+
+
+class Operator:
+    """ This class represent a Person (in this app is a paraglider pilot).
+
+    Attributes:
+        name: name of the pilot
+
+    Methods:
+        join_bus: add a pilot to a specific bus
+        offload_from_bus: remove a pilot from a specific bus
+    """
+
+    def __init__(self, company_name, nick_name, email, phone='', description=''):
+        self.company_name = company_name
+        self.nick_name = nick_name
+        self.email = email
+        self.phone = phone
+        self.operator_description = description
+        self.unique_operator_id = str(uuid.uuid1())
+
+        operator_creation_time = current_time()
+
+        # TODO: Check that email does not exist in database and ask to provide a new name
+        c.execute("INSERT INTO operators (operator_id, time, company_name, nick_name, email, phone, description)"
+                  " VALUES (?, ?, ?, ?, ?, ?, ?)", (self.unique_operator_id, operator_creation_time, self.company_name,
+                                                       self.nick_name, self.email, self.phone,
+                                                       self.operator_description))
+        db.commit()
 
 
 def current_time():

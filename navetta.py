@@ -1,13 +1,21 @@
 from modules import *
 
+
+# Create an operator eg Vito
+
+
+
 # We open a day eg 29/05/2020 for operations
 today = DayOfService("29/05/2020", "Today is a beautiful day")
-vehicle1 = CreateVehicles("Toyota Hyace", "Vito", "AZ 989 GH", "A beaten Truck")
-vehicle2 = CreateVehicles("For Transit", "Vito", "YY 389 HH", "A tough Truck")
 
-bus1 = Bus("Linea 1", "08:00", 4, vehicle1.unique_vehicle_id, "This line is best")
-bus2 = Bus("Linea 2", "10:00", 4, vehicle2.unique_vehicle_id, "This line is kind of good")
-bus3 = Bus("Linea 3", "14:00", 4, vehicle1.unique_vehicle_id, "This line is for amateur")
+vito = Operator("VLLM", "Vito", "Vito@email.com", "+390768050877", "A good guy")
+
+vehicle1 = CreateVehicles(vito, "Toyota Hyace", "AZ 989 GH", "A beaten Truck")
+vehicle2 = CreateVehicles(vito, "For Transit", "YY 389 HH", "A tough Truck")
+
+bus1 = Bus("Linea 1", "08:00", 4, vehicle1, "This line is best")
+bus2 = Bus("Linea 2", "10:00", 4, vehicle2, "This line is kind of good")
+bus3 = Bus("Linea 3", "14:00", 4, vehicle1, "This line is for amateur")
 
 
 pilot1 = Pilot("Simone", "Severini", "severini.simone@gmail.com", "Seve", "+41768050877", "Users created manually")

@@ -9,6 +9,9 @@ print("Connected to SQLite")
 c.execute("CREATE TABLE IF NOT EXISTS vehicles (vehicle_id TEXT PRIMARY KEY, time TIMESTAMP NOT NULL, "
           "make TEXT NOT NULL, operator TEXT, plate TEXT NOT NULL, description TEXT)")
 
+c.execute("CREATE TABLE IF NOT EXISTS operators (operator_id TEXT PRIMARY KEY, time TIMESTAMP NOT NULL, "
+          "company_name TEXT NOT NULL, nick_name TEXT NOT NULL, email TEXT NOT NULL, phone TEXT, description TEXT)")
+
 c.execute("CREATE TABLE IF NOT EXISTS days_of_service (day_id TEXT PRIMARY KEY, "
           "time TIMESTAMP NOT NULL, day TEXT NOT NULL, description TEXT)")
 
