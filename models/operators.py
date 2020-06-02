@@ -3,8 +3,11 @@ import uuid
 import pytz
 import datetime
 
-db = sqlite3.connect("data.sqlite", detect_types=sqlite3.PARSE_DECLTYPES)
-c = db.cursor()
+try:
+    db = sqlite3.connect("data.sqlite", detect_types=sqlite3.PARSE_DECLTYPES)
+    c = db.cursor()
+except sqlite3.Error as error:
+    print("Error while connecting to SQLite 3", error)
 
 
 class Operator:
@@ -40,11 +43,15 @@ class Operator:
 
         operator_creation_time = Operator.current_time()
 
-        # TODO: Check that email does not exist in database and ask to provide a new name
-        c.execute("INSERT INTO operators (operator_id, time, company_name, nick_name, email, phone, description,"
-                  " username, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (self.unique_operator_id,
-                                                                              operator_creation_time, self.company_name,
-                                                                              self.nick_name, self.email, self.phone,
-                                                                              self.operator_description, self.username,
-                                                                              self.password))
-        db.commit()
+        c.execute("SELECT * FROM operators WHERE email=? OR username=?", (self.email, self.username))
+        row = c.fetchone()
+        if row:
+            print("Operator's Username or Email already present in database")
+        else:
+            c.execute("INSERT INTO operators (operator_id, time, company_name, nick_name, email, phone, description,"
+                      " username, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (self.unique_operator_id,
+                                                                                  operator_creation_time, self.company_name,
+                                                                                  self.nick_name, self.email, self.phone,
+                                                                                  self.operator_description, self.username,
+                                                                                  self.password))
+            db.commit()

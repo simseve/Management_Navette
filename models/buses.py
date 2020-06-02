@@ -3,9 +3,11 @@ import uuid
 import pytz
 import datetime
 
-
-db = sqlite3.connect("data.sqlite", detect_types=sqlite3.PARSE_DECLTYPES)
-c = db.cursor()
+try:
+    db = sqlite3.connect("data.sqlite", detect_types=sqlite3.PARSE_DECLTYPES)
+    c = db.cursor()
+except sqlite3.Error as error:
+    print("Error while connecting to SQLite 3", error)
 
 
 class Bus:
@@ -59,26 +61,22 @@ class Bus:
 
     def offload_person(self, person):
         # add a select to verify that exists
-        c.execute("DELETE FROM schedule_pilots WHERE pilot_id = ?", (person.unique_pilot_id, ))
+        c.execute("DELETE FROM schedule_pilots WHERE pilot_id = ?", (person.unique_pilot_id,))
         db.commit()
-        # if person in self.people:
-        #     self.people.remove(person)
-        # else:
-        #     print("Pilot does not exist")
-        #     return False
 
     def join_day(self, day):
         self.day = day
         day.add_bus(self)
-        print("Bus {} with ID {} has joined {} with id {}".format(self.bus_name, self.unique_bus_id,
-                                                                  self.day.date, day.unique_day_id))
+        # print("Bus {} with ID {} has joined {} with id {}".format(self.bus_name, self.unique_bus_id,
+        #                                                           self.day.date, day.unique_day_id))
+
     def sign_out(self, day):
         self.day = day
         day.cancel_bus(self)
 
     def display_bus_composition(self):
         c.execute("SELECT make, plate, departure_time, nick_name FROM display_bus_composition "
-                  "WHERE (bus_id = ?)", (self.unique_bus_id, ))
+                  "WHERE (bus_id = ?)", (self.unique_bus_id,))
         row = c.fetchall()
         if row:
             print("I have found {} pilots on {}".format(len(row), self.bus_name))

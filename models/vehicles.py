@@ -3,8 +3,12 @@ import uuid
 import pytz
 import datetime
 
-db = sqlite3.connect("data.sqlite", detect_types=sqlite3.PARSE_DECLTYPES)
-c = db.cursor()
+try:
+    db = sqlite3.connect("data.sqlite", detect_types=sqlite3.PARSE_DECLTYPES)
+    c = db.cursor()
+except sqlite3.Error as error:
+    print("Error while connecting to SQLite 3", error)
+
 
 
 class Vehicles:
@@ -31,7 +35,12 @@ class Vehicles:
 
         vehicle_creation_time = Vehicles.current_time()
 
-        c.execute("INSERT INTO vehicles (vehicle_id, time, make, operator, plate, description)"
-                  " VALUES (?, ?, ?, ?, ?, ?)", (self.unique_vehicle_id, vehicle_creation_time, self.make,
-                                                 self.operator.unique_operator_id, self.plate, self.vehicle_description))
-        db.commit()
+        c.execute("SELECT * FROM vehicles WHERE plate=?", (self.plate,))
+        row = c.fetchone()
+        if row:
+            print("Vehicle already present in database")
+        else:
+            c.execute("INSERT INTO vehicles (vehicle_id, time, make, operator, plate, description)"
+                      " VALUES (?, ?, ?, ?, ?, ?)", (self.unique_vehicle_id, vehicle_creation_time, self.make,
+                                                     self.operator.unique_operator_id, self.plate, self.vehicle_description))
+            db.commit()

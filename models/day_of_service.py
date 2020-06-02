@@ -4,8 +4,11 @@ import pytz
 import datetime
 
 
-db = sqlite3.connect("data.sqlite", detect_types=sqlite3.PARSE_DECLTYPES)
-c = db.cursor()
+try:
+    db = sqlite3.connect("data.sqlite", detect_types=sqlite3.PARSE_DECLTYPES)
+    c = db.cursor()
+except sqlite3.Error as error:
+    print("Error while connecting to SQLite 3", error)
 
 
 class DayOfService:
@@ -32,10 +35,14 @@ class DayOfService:
         self.unique_day_id = str(uuid.uuid1())
         day_creation_time = DayOfService.current_time()
 
-        # TODO: Check that name does not exist in database and ask to provide a new name
-        c.execute("INSERT INTO days_of_service (day_id, time, day, description) VALUES (?, ?, ?, ?)",
-                  (self.unique_day_id, day_creation_time, self.date, self.day_description))
-        db.commit()
+        c.execute("SELECT * FROM days_of_service WHERE day=?", (self.date,))
+        row = c.fetchone()
+        if row:
+            print("Day of service already present in database")
+        else:
+            c.execute("INSERT INTO days_of_service (day_id, time, day, description) VALUES (?, ?, ?, ?)",
+                      (self.unique_day_id, day_creation_time, self.date, self.day_description))
+            db.commit()
 
     def add_bus(self, bus):
         """ Add a Bus to a day when the service is operational """
@@ -61,5 +68,5 @@ class DayOfService:
                 t1, t2, t3, t4, t5 = x
                 print("On date {} at {} the bus {} {} with {} passengers is set for departure".format(t1, t2, t3, t4, t5))
         else:
-            print("The bus is not scheduled, not sure why you want to cancel")
+            print("The day schedule is EMPTY")
 

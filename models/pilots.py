@@ -3,8 +3,11 @@ import uuid
 import pytz
 import datetime
 
-db = sqlite3.connect("data.sqlite", detect_types=sqlite3.PARSE_DECLTYPES)
-c = db.cursor()
+try:
+    db = sqlite3.connect("data.sqlite", detect_types=sqlite3.PARSE_DECLTYPES)
+    c = db.cursor()
+except sqlite3.Error as error:
+    print("Error while connecting to SQLite 3", error)
 
 
 class Pilot:
@@ -41,20 +44,24 @@ class Pilot:
 
         pilot_creation_time = Pilot.current_time()
 
-        # TODO: Check that email does not exist in database and ask to provide a new name
-        c.execute("INSERT INTO pilots (pilot_id, time, first_name, last_name, nick_name, email, phone, description,"
-                  " username, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                  (self.unique_pilot_id, pilot_creation_time, self.first_name, self.last_name, self.nick_name,
-                   self.email, self.phone, self.pilot_description, self.username, self.password))
-        db.commit()
+        c.execute("SELECT * FROM pilots WHERE email=? OR username=?", (self.email,self.username))
+        row = c.fetchone()
+        if row:
+            print("Pilot's Email or Username is already present in database")
+        else:
+            c.execute("INSERT INTO pilots (pilot_id, time, first_name, last_name, nick_name, email, phone, description,"
+                      " username, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                      (self.unique_pilot_id, pilot_creation_time, self.first_name, self.last_name, self.nick_name,
+                       self.email, self.phone, self.pilot_description, self.username, self.password))
+            db.commit()
 
     def join_bus(self, bus):
         self.bus = bus
         if self.bus.current_seats > 0:
             self.bus.current_seats -= 1
             bus.add_person(self)
-            print("Pilot {} with ID {} has joined bus {} with ID {}".
-                  format(self.unique_pilot_id, self.nick_name, self.bus.bus_name, bus.unique_bus_id))
+            # print("Pilot {} with ID {} has joined bus {} with ID {}".
+            #       format(self.unique_pilot_id, self.nick_name, self.bus.bus_name, bus.unique_bus_id))
         else:
             print("The bus {} is full and pilot {} is not added".format(self.bus.bus_name, self.nick_name))
 
@@ -63,6 +70,3 @@ class Pilot:
         self.bus.current_seats += 1
         bus.offload_person(self)
         print("Pilot {} has been offloaded from bus {}".format(self.last_name, self.bus.bus_name))
-
-
-
